@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PostsController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    {% for record in records %}
+        <div>
+            <div>{{ record.date }}</div>
+            <div >
+                <img style="max-width: 150px; max-height: 150px;" src="{{ asset('uploads/') ~ record.image_name }}" alt="">
+                    {{ record.description }}
+                <a href = "https://127.0.0.1:8000/post/{{record.id}}">Continue reading</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
