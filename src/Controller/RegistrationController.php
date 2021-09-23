@@ -30,17 +30,13 @@ class RegistrationController extends AbstractController
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 //            $user->setRoles(['ROLE_USER']);
-
+            $user->setRole('ROLE_USER');
             $em = $this->getDoctrine()->getManager();
-
             $em->persist($user);
             $em->flush();
-
 //            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
 //            $tokenStorage->setToken($token);
-
-            $this->addFlash('success', 'You have been successfully registered! Congratulations');
-
+            return $this->redirect($this->generateUrl('login'));
         }
 
         return $this->render(

@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Likes;
+use App\Entity\Users;
 use App\Form\PostType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request ;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,20 +19,33 @@ class PostsController extends AbstractController
     /**
      * @Route("/posts", name="posts")
      */
-    public function show(){
+    public function show(Request $request ,PaginatorInterface  $paginator){
+        $user = new Users();
+        $likes = new Likes();
+        $user = $this->getUser();
+        $user_id = $user->getId();
         $posts = $this->getDoctrine()
             ->getRepository(Posts::class)
             ->findAll();
+        $post = $paginator->paginate(
+            $posts,
+            $request->query->getInt('page' , 1),
+            5
+        );
+
+        $likes = $this->getDoctrine()
+            ->getRepository(Likes::class)
+            ->findByExampleField($user_id);
 
         if (!$posts) {
             throw $this->createNotFoundException(
                 'No product found  '
             );
-
         }
 
         return $this->render('posts/index.html.twig', [
-            'records' =>  $posts
+            'records' =>  $post,
+            'likes' => $likes
         ]);
 
     }
@@ -39,7 +55,7 @@ class PostsController extends AbstractController
     public function index($id): Response
     {
         return $this->render('posts/post.html.twig', [
-            'record' =>  $product = $this->getDoctrine()
+            'record' =>  $post = $this->getDoctrine()
                 ->getRepository(Posts::class)
                 ->find($id)
         ]);
@@ -47,12 +63,11 @@ class PostsController extends AbstractController
     /**
      * @Route("/posts/add", name="add_post")
      */
-    public function addpost(Request $request)
+    public function addPost(Request $request)
     {
         $post = new Posts();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-
         if ($form->isSubmitted()){
             $file = $request->files->get('post')['image_name'];
             $uploads_directory = $this->getParameter('uploads_directory');
@@ -75,9 +90,43 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/post/update/{id}", name="update_post")
+     * @Route("/posts/update/{id}", name="update_post")
      */
 
 
-git init
+    public function updatePost(Request $request , int $id)
+    {
+
+
+        $post = new Posts();
+        $postData = $this->getDoctrine()
+            ->getRepository(Posts::class)
+            ->findOneBy(['id' => $id]);
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+            if ($form->isSubmitted()){
+                $fieldData = $form->getData();
+                $file = $request->files->get('post')['image_name'];
+                $uploads_directory = $this->getParameter('uploads_directory');
+                $filename = md5(uniqid()) . '.' .  $file->guessExtension();
+                $file->move(
+                    $uploads_directory,
+                    $filename
+                );
+                $em= $this->getDoctrine()->getManager();
+                $post = $em->getRepository(Posts::class)->find($id);
+
+                $post->setDescription($fieldData->getDescription());
+                $post->setImageName($filename);
+                $post->setDate($fieldData->getDate());
+                $post->setTrueDate($fieldData->getTrueDate());
+                $em->persist($post);
+                $em->flush();
+        }
+        return $this->render('posts/edit.html.twig', [
+            'form' => $form->createView(),
+            'postData'=>$postData
+        ]);
+    }
+
 }

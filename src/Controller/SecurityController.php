@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -16,19 +17,27 @@ class SecurityController extends AbstractController
      */
     public function login(Request $request , AuthenticationUtils $utils)
     {
+        $user = new Users();
         $error = $utils->getLastAuthenticationError();
         $lastUsername = $utils->getLastUsername();
 
-        return $this->render('security/login.html.twig', [
-            'error' =>$error,
-            'last_username' => $lastUsername,
-        ]);
+        return
+                $this->render('security/login.html.twig', [
+                'error' =>$error,
+                'last_username' => $lastUsername,
+            ]);
+
+
+
+
+
     }
 
     /**
      * @Route ("/logout" , name="logout")
      */
     public function logout(){
-
+        return $this->redirect($this->generateUrl('login'));
     }
+
 }

@@ -12,11 +12,17 @@ security:
             entity:
                 class: App\Entity\Users
                 property:
+
+
+
+
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            access_denied_handler: App\Security\AccessDeniedHandler
             anonymous: lazy
 
             form_login:
@@ -32,4 +38,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/posts/add  , roles: ROLE_ADMIN }
+        - { path: ^/posts/update/, roles: ROLE_ADMIN }
+        - { path: ^/posts, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/post/, roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/login, roles: IS_ANONYMOUS}
+#        - { path: ^/registration, roles: IS_ANONYMOUS}
+
+
+
+
 

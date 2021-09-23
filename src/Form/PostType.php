@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Likes;
 use App\Entity\Posts;
 
 use Symfony\Component\Form\AbstractType;
@@ -20,13 +21,16 @@ class PostType extends AbstractType
         $builder
             ->add('description' , TextareaType::class,[
                 'attr'=>[
-                    'placeholder' => 'enter description'
+                    'placeholder' => 'Enter description',
+                    'class'=>"form-control"
                 ]
             ])
             ->add('image_name' , FileType::class , [
                 'mapped'=> false ,
-                'label' =>"please upload the file",
                 'required' => true,
+                'attr'=>[
+                   'class'=> 'form-control',
+                ],
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -34,22 +38,22 @@ class PostType extends AbstractType
                             'image/png',
                             'image/jpg',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
                     ])
                 ],
             ])
             ->add('date' , TextareaType::class,[
-                'attr'=>[
-                    'placeholder' => 'enter the name of the day'
-                ]
+                 'attr'=>[
+                     'class'=> 'form-control',
+                        'placeholder' => 'enter the name of the day'
+                 ],
             ])
             ->add('trueDate' , DateType::class , [
                 'widget' => 'choice',
-                'input'  => 'datetime_immutable',
             ])
             ->add('save' , SubmitType::class,[
                 'attr'=>[
-                    'class'=> 'btn btn-success'
+                    'class'=> 'btn btn-success',
+                    'style'=>'margin-top:20px ; width:70px'
                 ]
             ])
         ;

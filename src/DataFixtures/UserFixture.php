@@ -18,6 +18,7 @@ class UserFixture extends Fixture
         $user= new Users();
         $user->setUsername('stepa');
         $user->setPassword($this->encoder->encodePassword($user , '12345'));
+        $user->setRole('ROLE_ADMIN');
         $manager->persist($user);
         $manager->flush();
     }

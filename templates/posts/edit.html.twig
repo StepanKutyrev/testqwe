@@ -9,10 +9,19 @@
     </style>
 
     <div class="example-wrapper">
-        {{ form_start(form) }}
-        {# ... #}
-
-        {{ form_row(form.image_name ) }}
+        {{ form_start(form ) }}
+        {{ form_row(form.image_name , {'value' : postData.image_name }) }}
+        {{ form_row(form.description , {'value' : postData.description} ) }}
+        {{ form_row(form.date , {'value' : postData.date}) }}
+                {{ form_row(form.trueDate , {'value' : postData.trueDate|date('m\\d\\Y' )})  }}
+        <div style="margin-left: 0px" class="row">
+            {{ form_row(form.save) }}
+            <form method="get" action="https://127.0.0.1:8000/posts">
+                <button style="width: 70px; margin-left: 5px ; padding:0px 0px"  class="btn btn-secondary" type="submit">Back</button>
+            </form>
+        </div>
         {{ form_end(form) }}
+
+
     </div>
 {% endblock %}

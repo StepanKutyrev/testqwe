@@ -7,17 +7,88 @@
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
-
-<div class="example-wrapper">
-    {% for record in records %}
-        <div>
-            <div>{{ record.date }}</div>
-            <div >
-                <img style="max-width: 150px; max-height: 150px;" src="{{ asset('uploads/') ~ record.image_name }}" alt="">
-                    {{ record.description }}
-                <a href = "https://127.0.0.1:8000/post/{{record.id}}">Continue reading</a>
+<div id="main" class="example-wrapper">
+    <a href="{{ path('logout') }}">Logout</a>
+    {% for key, rec in records.items %}
+        <div style="margin-bottom: 25px">
+            <div id="postId">{{ rec.date }}</div>
+            <div class="row">
+                <div  class="col-5">
+                    <img  style="max-width: 300px; max-height: 300px; border: 4px solid #D3D3D3;" src="{{ ('uploads/') ~ rec.image_name }}" alt="">
+                </div>
+                <div class="col-7" style="padding: 0px ;word-wrap: break-word">
+                    {{ rec.description }}asdadasdasdadsasdadsasdasdasdassaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaaasdadasdasdadsasdadsasdasdasdassaaaaaaaaaaaa
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-9">
+                    {% if likes[key] is not defined   %}
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0" class="like btn btn-success" >like</button>
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0 ; margin-left: 5px" class="dislike btn btn-danger" >dislike</button>
+                    {% elseif likes[key].RatingAction == "dislike"%}
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0" class="like btn btn-success" >like</button>
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0 ; margin-left: 5px" class="dislike btn btn-danger" ><b>DISLIKE</b></button>
+                    {% elseif likes[key].RatingAction == "like"  %}
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0" class="like btn btn-success" ><b>LIKE</b></button>
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0 ; margin-left: 5px"  class="dislike btn btn-danger" >dislike</button>
+                    {% else  %}
+                        <button  value="{{ rec.id }}" style="width: 70px ; padding: 0 0" class="like btn btn-success" >like</button>
+                        <button value="{{ rec.id }}" style="width: 70px ; padding: 0 0 ; margin-left: 5px" class="dislike btn btn-danger" >dislike</button>
+                    {% endif  %}
+                </div>
+                <div class="col-3" >
+                    <a style="padding-left: 40px" href = "https://127.0.0.1:8000/post/{{rec.id}}">Continue reading</a>
+                </div>
             </div>
         </div>
     {% endfor %}
+        <div class="navigation">
+            {{ knp_pagination_render(records) }}
+        </div>
 </div>
+
+<script>
+    $(document).ready(function (){
+        $('.like').on('click'  , function (){
+            let controller = '{{ path('post_like') }}';
+            let PostId = $(this).val();
+            ajaxPost(PostId , controller);
+        });
+
+        $('.dislike').on('click'  , function (){
+
+            let controller = '{{ path('post_dislike') }}';
+            let PostId2 = $(this).val();
+            ajaxPost(PostId2 , controller);
+        })
+    });
+
+    function ajaxPost(PostId , controller){
+
+        let data = new FormData();
+        data.append('PostId' , PostId);
+        $.ajax({
+            url: controller,
+            type: "POST",
+            contentType: false,
+            cache: false,
+            processData: false,
+            data: data,
+            error:
+                function (e){
+                    console.log(e);
+                }
+        })
+        $.ajax({url: '{{ path('posts') }}' , type: "GET"}).then(result => {
+            $("#main").html(result);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    function ajaxGet() {
+
+    }
+</script>
+
 {% endblock %}
