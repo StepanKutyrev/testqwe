@@ -17,7 +17,7 @@ use App\Entity\Posts;
 class PostsController extends AbstractController
 {
     /**
-     * @Route("/posts", name="posts")
+     * @Route("/api/posts", name="posts")
      */
     public function show(Request $request ,PaginatorInterface  $paginator){
         $user = new Users();
@@ -50,7 +50,7 @@ class PostsController extends AbstractController
 
     }
     /**
-     * @Route("/post/{id}", name="post" )
+     * @Route("/api/post/{id}", name="post" )
      */
     public function index($id): Response
     {

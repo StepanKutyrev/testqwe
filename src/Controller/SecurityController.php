@@ -9,17 +9,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/api/login", name="login")
      */
-    public function login(Request $request , AuthenticationUtils $utils)
+    public function login(Request $request , AuthenticationUtils $utils , TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
     {
+
         $user = new Users();
         $error = $utils->getLastAuthenticationError();
         $lastUsername = $utils->getLastUsername();
+//        $token = $jwtManager->create($user);
+//        dd($token);
 
         return
                 $this->render('security/login.html.twig', [
@@ -27,17 +32,13 @@ class SecurityController extends AbstractController
                 'last_username' => $lastUsername,
             ]);
 
-
-
-
-
     }
 
     /**
-     * @Route ("/logout" , name="logout")
+     * @Route ("/api/logout" , name="logout")
      */
     public function logout(){
-        return $this->redirect($this->generateUrl('login'));
+        return $this->redirect($this->generateUrl('/api/login'));
     }
 
 }

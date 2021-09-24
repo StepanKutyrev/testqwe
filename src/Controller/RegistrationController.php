@@ -29,7 +29,6 @@ class RegistrationController extends AbstractController
 
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
-//            $user->setRoles(['ROLE_USER']);
             $user->setRole('ROLE_USER');
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

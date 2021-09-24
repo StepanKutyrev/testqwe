@@ -2,50 +2,62 @@ security:
     encoders:
         App\Entity\Users:
             algorithm: bcrypt
-
     providers:
         my_provider:
             entity:
                 class: App\Entity\Users
                 property: username
-        reg_provider:
-            entity:
-                class: App\Entity\Users
-                property:
-
-
-
-
-
+#        reg_provider:
+#            entity:
+#                class: App\Entity\Users
+#                property:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        login:
             access_denied_handler: App\Security\AccessDeniedHandler
-            anonymous: lazy
-
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            provider: my_provider
             form_login:
                 login_path: login
                 check_path: login
-                provider: my_provider
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             logout:
-                path: /logout
-                target: /login
+                path: logout
+                target: login
+        api:
+            pattern: ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+        main :
+            anonymous: true
 
+#        main:
+#            access_denied_handler: App\Security\AccessDeniedHandler
+#            pattern:  ^/api/login
+#            stateless: true
+#            anonymous: lazy
+#            form_login:
+#                check_path: /api/login
+#                provider: my_provider
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+#            logout:
+#                path: /api/logout
+#                target: /api/login
+#
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/posts/add  , roles: ROLE_ADMIN }
         - { path: ^/posts/update/, roles: ROLE_ADMIN }
-        - { path: ^/posts, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/post/, roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/posts, roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/post/, roles: IS_AUTHENTICATED_FULLY }
 #        - { path: ^/login, roles: IS_ANONYMOUS}
 #        - { path: ^/registration, roles: IS_ANONYMOUS}
-
-
-
-
-
