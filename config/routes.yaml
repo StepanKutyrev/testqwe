@@ -4,3 +4,37 @@
 
 login_check:
   path: /api/login_check
+
+api_get_post_likes:
+  path: /api/posts/get
+  controller: App\Controller\PostsController:ApiShowPostsAndLikes
+  methods: [GET]
+
+api_add_post:
+  path: /api/posts/addNew
+  controller: App\Controller\PostsController:ApiAddPost
+  methods: [POST]
+
+api_update_post:
+  path: /api/posts/updatePost/{id}
+  controller: App\Controller\PostsController:ApiUpdatePost
+
+api_registration:
+  path: /registrateUser
+  controller: App\Controller\RegistrationController:registrateUser
+  methods: [POST]
+
+api_login:
+  path: /loginUser
+  controller: App\Controller\SecurityController:loginUser
+  methods: [POST]
+
+api_addLike:
+  path: /api/addLike
+  controller: App\Controller\PostLikeController:ApiAddLike
+  methods: [POST]
+
+api_dislike:
+  path: /api/dislike
+  controller: App\Controller\PostLikeController:ApiDislike
+  methods: [POST]

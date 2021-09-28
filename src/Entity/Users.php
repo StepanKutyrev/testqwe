@@ -102,7 +102,6 @@ $userRole = $this->getRole();
     }
     public function unserialize($string)
     {
-
             list(
             $this->id,
             $this->username,

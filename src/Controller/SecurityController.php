@@ -15,16 +15,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/api/login", name="login")
+     * @Route("/login", name="login")
      */
-    public function login(Request $request , AuthenticationUtils $utils , TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+        public function login(Request $request , AuthenticationUtils $utils , TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
     {
-
         $user = new Users();
         $error = $utils->getLastAuthenticationError();
         $lastUsername = $utils->getLastUsername();
-//        $token = $jwtManager->create($user);
-//        dd($token);
 
         return
                 $this->render('security/login.html.twig', [
@@ -33,12 +30,10 @@ class SecurityController extends AbstractController
             ]);
 
     }
-
     /**
-     * @Route ("/api/logout" , name="logout")
+     * @Route ("/logout" , name="logout")
      */
     public function logout(){
-        return $this->redirect($this->generateUrl('/api/login'));
+        return $this->redirect($this->generateUrl('login'));
     }
-
 }

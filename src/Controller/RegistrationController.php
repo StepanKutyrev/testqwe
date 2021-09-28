@@ -43,4 +43,25 @@ class RegistrationController extends AbstractController
             array('form' => $form->createView())
         );
     }
+
+    public function registrateUser(Request $request, UserPasswordEncoderInterface $passwordEncoder, TokenStorageInterface $tokenStorage)
+    {
+        $user = new Users();
+        $form = $this->createForm(RegistrationType::class, $user);
+
+        $form->handleRequest($request);
+        if (!$form->isSubmitted() ) {
+
+            $password = $passwordEncoder->encodePassword($user, $request->request->get('password'));
+            $username = $request->request->get('username');
+            $user->setUsername($username);
+            $user->setPassword($password);
+            $user->setRole('ROLE_USER');
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+        return $this->json($user);
+
+    }
 }

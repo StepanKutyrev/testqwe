@@ -48,7 +48,9 @@ class PostType extends AbstractType
                  ],
             ])
             ->add('trueDate' , DateType::class , [
-                'widget' => 'choice',
+                'required' => false,
+                'widget' => 'single_text',
+                'empty_data'  => '',
             ])
             ->add('save' , SubmitType::class,[
                 'attr'=>[

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostsRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -86,7 +87,6 @@ class Posts
     public function setTrueDate(\DateTimeInterface $trueDate): self
     {
         $this->trueDate = $trueDate;
-
         return $this;
     }
 }
